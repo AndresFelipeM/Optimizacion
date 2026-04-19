@@ -1,0 +1,51 @@
+# EPIDEMIA EN UNA CIUDAD 
+import numpy as np
+from scipy.integrate import odeint
+
+# Datos
+N     = 10000   # poblacion total
+beta  = 0.00003 # tasa de contagio por dia
+gamma = 0.1     # tasa de recuperacion por dia
+I0    = 50      # infectados iniciales
+S0    = N - I0  # susceptibles iniciales
+
+
+# dI/dt = beta * S * I - gamma * I
+# S = N - I  -->  dI/dt = beta*(N - I)*I - gamma*I
+
+def modelo_SIS(I, t):
+    S = N - I
+    dIdt = beta * S * I - gamma * I
+    return dIdt
+
+# Resolucion
+t = np.linspace(0, dias, 1000)
+I = odeint(modelo_SIS, I0, t).flatten()
+S = N - I
+
+# Puntos de equilibrio
+  # dI/dt = 0  -->  I*(beta*(N-I) - gamma) = 0
+  # I* = 0  o  I* = N - gamma/beta
+I_eq1 = 0
+I_eq2 = N - gamma / beta
+S_eq1 = N - I_eq1
+S_eq2 = N - I_eq2
+
+# Resultados
+print(" = " * 45)
+print(" Epidemia en una Ciudad ")
+print(" = " * 45)
+
+
+print(f"\n {'Infectados I(t)':<25} {'Susceptibles S(t)':<25}")
+print("-" * 60)
+for i in range(0, len(t), len(t)//5):
+    print(f" {I[i]:<25.2f} {S[i]:<25.2f}")
+
+print()
+print(" = " * 45)
+print(f"Puntos de equilibrio (dI/dt = 0):")
+print(f"  Equilibrio 1: I* = {I_eq1:.2f}  ->  si la enfermedad desaparece se mantiene asi")
+print(f"  Equilibrio 2: I* = {I_eq2:.2f}  ->  es el punto donde la velociadad a la que la gente se contagia es igual a la que se recuperan")
+print()
+print(" = " * 45)

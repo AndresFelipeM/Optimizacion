@@ -1,0 +1,55 @@
+# MODELO LOGISTICO DE PESCA
+
+import numpy as np
+
+# Datos
+K  = 1000  # capacidad maxima de la laguna (peces)
+r  = 0.4   # tasa de crecimiento intrinseca
+H  = 80    # peces extraidos por año (pesca controlada)
+P0 = 400   # poblacion inicial
+
+# Modelo logistico con pesca
+  # P_{n+1} = P_n + r*P_n*(1 - P_n/K) - H
+
+def siguiente_anio(P):
+    return P + r * P * (1 - P / K) - H
+
+# Simulacion
+P = np.zeros(anios + 1)
+P[0] = P0
+
+for n in range(anios):
+    P[n+1] = siguiente_anio(P[n])
+
+# Puntos de equilibrio
+  # P* = P* + r*P**(1 - P*/K) - H
+  # 0= r*P*(1 - P*/K) - H 
+a =  r / K
+b = -r
+c =  H
+
+discriminante = b**2 - 4*a*c
+P_eq1 = (-b - np.sqrt(discriminante)) / (2*a)  # equilibrio inestable (menor)
+P_eq2 = (-b + np.sqrt(discriminante)) / (2*a)  # equilibrio estable  (mayor)
+
+# Resultados
+print(" = " * 45)
+print(" Modelo Logistico de Pesca")
+print(" = " * 45)
+
+print(f"\n{'Año':<10} {'Poblacion P_n':<20}")
+print("-" * 30)
+for n in range(3):
+    print(f"{n:<10} {P[n]:<20.2f}")
+
+print()
+print(" = " * 45)
+print(f"Puntos de equilibrio (P_{{n+1}} = P_n):")
+print()
+print(f"  Equilibrio inestable : P_pe1 = {P_eq1:.2f} peces")
+print(f"    -> Si P0 < {P_eq1:.2f}, la poblacion se extingue")
+print()
+print(f"  Equilibrio estable   : P_pe2 = {P_eq2:.2f} peces")
+print(f"    -> Si P0 > {P_eq1:.2f}, la poblacion tiende a {P_eq2:.2f}")
+print()
+print(" = " * 45)

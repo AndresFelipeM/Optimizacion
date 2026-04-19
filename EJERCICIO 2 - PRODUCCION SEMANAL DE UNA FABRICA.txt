@@ -1,0 +1,49 @@
+# PRODUCCION SEMANAL DE UNA FABRICA 
+import numpy as np
+
+# Datos iniciales
+S0 = 200   # sillas en la semana 0
+M0 = 80    # mesas en la semana 0
+
+semanas = 2  # numero de semanas a simular
+
+# S_{n+1} = 0.6*S_n + 0.2*M_n + 40
+# M_{n+1} = 0.1*S_n + 0.5*M_n + 20
+
+def siguiente_semana(S, M):
+    S_next = 0.6*S + 0.2*M + 40
+    M_next = 0.1*S + 0.5*M + 20
+    return S_next, M_next
+
+# Simulacion
+S = np.zeros(semanas + 1)
+M = np.zeros(semanas + 1)
+
+S[0] = S0
+M[0] = M0
+
+for n in range(semanas):
+    S[n+1], M[n+1] = siguiente_semana(S[n], M[n])
+
+# Punto de equilibrio
+  # 0.4*S* - 0.2*M* = 40
+  # -0.1*S* + 0.5*M* = 20
+A = np.array([[0.4, -0.2],
+              [-0.1,  0.5]])
+b = np.array([40, 20])
+
+S_eq, M_eq = np.linalg.solve(A, b)
+
+# Resultados
+print(" = " * 45)
+print(" Produccion Semanal de una Fabrica")
+print(" = " * 45)
+
+print(f"\n{'Semana':<10} {'Sillas (S_n)':<20} {'Mesas (M_n)':<20}")
+for n in range(semanas + 1):
+    print(f"{n:<10} {S[n]:<20.2f} {M[n]:<20.2f}")
+
+print()
+print(" = " * 45)
+print(f"Punto de equilibrio: S* = {S_eq:.2f} sillas  |  M* = {M_eq:.2f} mesas")
+print(" = " * 45)
